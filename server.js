@@ -1,3 +1,7 @@
+if(process.env.NODE_ENV !== "production") {
+    require('dotenv').config();
+}
+
 const express = require('express'); // Imports the Express back-end framework using CommonJS module syntax.
 const connectDB = require('./config/db'); // Imports the connectDB function exported in db.js
 
@@ -7,7 +11,7 @@ const app = express(); // Creates Express application.
 connectDB();
 
 // Init Middleware used to parse request body
-app.use(express.json({ extended: false}));
+app.use(express.json({ extended: false }));
 
 app.get('/', (req, res) => res.send('API running')); // Single enpoint to test. This is an HTTP GET request. / represents the root path. Some text is sent to the browser.
 
