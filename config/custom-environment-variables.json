@@ -1,3 +1,4 @@
 {
-    "mongoURI": "DB_ACCESS_KYLE123"
+    "mongoURI": "DB_ACCESS_KYLE123",
+    "jwtSecret": "SECRET_TOKEN"
 }
