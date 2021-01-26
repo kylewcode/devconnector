@@ -128,13 +128,14 @@ router.get('/user/:user_id', async (req, res) => {
       user: req.params.user_id,
     }).populate('user', ['name', 'avatar']);
 
-    if (!profile) return res.status(400).json({ msg: 'Profile does not exist'});
+    if (!profile)
+      return res.status(400).json({ msg: 'Profile does not exist' });
 
     res.json(profile);
   } catch (error) {
     console.error(error.message);
-    if(error.kind === 'ObjectId') {
-      return res.status(400).json({ msg: 'Profile does not exist'})
+    if (error.kind === 'ObjectId') {
+      return res.status(400).json({ msg: 'Profile does not exist' });
     }
     res.status(500).send('Server Error');
   }
