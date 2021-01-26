@@ -5,6 +5,9 @@ if(process.env.NODE_ENV !== "production") {
 const express = require('express'); // Imports the Express back-end framework using CommonJS module syntax.
 const connectDB = require('./config/db'); // Imports the connectDB function exported in db.js
 
+const mongoose = require('mongoose');
+mongoose.set('useFindAndModify', false);
+
 const app = express(); // Creates Express application.
 
 // Connect Database
