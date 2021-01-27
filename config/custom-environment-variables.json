@@ -1,4 +1,6 @@
 {
     "mongoURI": "DB_ACCESS_KYLE123",
-    "jwtSecret": "SECRET_TOKEN"
+    "jwtSecret": "SECRET_TOKEN",
+    "githubClientId": "GITHUB_CLIENT_ID",
+    "githubSecret": "GITHUB_CLIENT_SECRET"
 }
