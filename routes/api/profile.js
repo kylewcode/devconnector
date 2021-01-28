@@ -1,10 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const auth = require('../../middleware/auth');
+const config = require('config');
 const { body, validationResult } = require('express-validator');
 
 const Profile = require('../../models/Profile');
 const User = require('../../models/User');
+const { default: axios } = require('axios');
 
 // @route   GET api/profile/me
 // @desc    Get current user's profile
@@ -319,9 +321,26 @@ router.delete('/education/:edu_id', auth, async (req, res) => {
 // @route   GET api/profile/github/:username
 // @desc    Get github profile of user
 // @access  Public
-router.get('/github/:username', (req, res) => {
+router.get('/github/:username', async (req, res) => {
   try {
-    
+    // (username is kylewcode)(True)
+    const uri = encodeURI(
+      `https://api.github.com/users/${req.params.username}/repos?per_page=5&sort=created:asc`
+    );
+
+    // console.log(uri);
+    // (uri will be https://api.github.com/users/kylewcode/repos?per_page=5&sort=created:asc)
+    // (True)
+
+    const headers = {
+      'user-agent': 'node.js',
+      Authorization: `token ${config.get('githubSecret')}` // (Authorization: `token ffed7aee44a84546b53b6577367f20796b67f281`) (true)
+    }
+    console.log(headers);
+
+    const gitHubResponse = await axios.get(uri, { headers });
+    return res.json(gitHubResponse.data);
+
   } catch (error) {
     console.error(error.message);
     res.status(500).json('Server Error');
