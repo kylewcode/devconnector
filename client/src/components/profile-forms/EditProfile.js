@@ -1,10 +1,15 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { createProfile } from '../../actions/profile';
+import { createProfile, getCurrentProfile } from '../../actions/profile';
 
-const CreateProfile = ({ createProfile, history }) => {
+const EditProfile = ({
+  createProfile,
+  getCurrentProfile,
+  profile: { profile, loading },
+  history,
+}) => {
   const [formData, setFormData] = useState({
     company: '',
     website: '',
@@ -37,20 +42,41 @@ const CreateProfile = ({ createProfile, history }) => {
 
   const [displaySocialInputs, toggleSocialInputs] = useState(false);
 
+  // User needs to see what info that have filled out in their profile.
+  useEffect(() => {
+    getCurrentProfile();
+
+    setFormData({
+      company: loading || !profile.company ? '' : profile.company,
+      website: loading || !profile.website ? '' : profile.website,
+      location: loading || !profile.location ? '' : profile.location,
+      status: loading || !profile.status ? '' : profile.status,
+      skills: loading || !profile.skills ? '' : profile.skills.join(','),
+      githubusername: loading || !profile.githubusername ? '' : profile.githubusername,
+      bio: loading || !profile.bio ? '' : profile.bio,
+      twitter: loading || !profile.twitter ? '' : profile.twitter,
+      facebook: loading || !profile.facebook ? '' : profile.facebook,
+      linkedin: loading || !profile.linkedin ? '' : profile.linkedin,
+      youtube: loading || !profile.youtube ? '' : profile.youtube,
+      instagram: loading || !profile.instagram ? '' : profile.instagram,
+    });
+    // eslint-disable-next-line
+  }, []);
+
   const handleChange = e =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const handleSubmit = e => {
     e.preventDefault();
-    createProfile(formData, history);
+    createProfile(formData, history, true);
   };
 
   return (
     <Fragment>
-      <h1 class='large text-primary'>Create Your Profile</h1>
+      <h1 class='large text-primary'>Edit Your Profile</h1>
       <p class='lead'>
-        <i class='fas fa-user'></i> Let's get some information to make your
-        profile stand out
+        <i class='fas fa-user'></i> Let's get some information to edit your
+        profile
       </p>
       <small>* = required field</small>
       <form class='form' onSubmit={e => handleSubmit(e)}>
@@ -220,8 +246,16 @@ const CreateProfile = ({ createProfile, history }) => {
   );
 };
 
-CreateProfile.propTypes = {
+EditProfile.propTypes = {
   createProfile: PropTypes.func.isRequired,
+  getCurrentProfile: PropTypes.func.isRequired,
+  profile: PropTypes.object.isRequired,
 };
 
-export default connect(null, { createProfile })(withRouter(CreateProfile));
+const mapStateToProps = state => ({
+  profile: state.profile,
+});
+
+export default connect(mapStateToProps, { createProfile, getCurrentProfile })(
+  withRouter(EditProfile)
+);
