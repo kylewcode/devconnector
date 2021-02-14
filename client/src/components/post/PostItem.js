@@ -11,6 +11,7 @@ const PostItem = ({
   addLike,
   removeLike,
   deletePost,
+  showActions,
 }) => (
   <div className='post bg-white p-1 my-1'>
     <div>
@@ -22,35 +23,48 @@ const PostItem = ({
     <div>
       <p className='my-1'>{text}</p>
       <p className='post-date'>Posted on {formatDate(date)}</p>
-      <button
-        type='button'
-        className='btn btn-light'
-        onClick={() => addLike(_id)}
-      >
-        <i className='fas fa-thumbs-up'></i>
-        <span>{likes.length > 0 ? likes.length : null}</span>
-      </button>
-      <button
-        type='button'
-        className='btn btn-light'
-        onClick={() => removeLike(_id)}
-      >
-        <i className='fas fa-thumbs-down'></i>
-      </button>
-      <Link to={`post/${_id}`} className='btn btn-primary'>
-        Discussion{' '}
-        <span className='comment-count'>
-          {comments.length > 0 ? comments.length : '0'}
-        </span>
-      </Link>
-      {auth.isAuthenticated && auth.user._id === user ? (
-        <button type='button' className='btn btn-danger' onClick={() => deletePost(_id)}>
-          <i className='fas fa-times'></i>
-        </button>
+
+      {showActions ? (
+        <Fragment>
+          <button
+            type='button'
+            className='btn btn-light'
+            onClick={() => addLike(_id)}
+          >
+            <i className='fas fa-thumbs-up'></i>
+            <span>{likes.length > 0 ? likes.length : null}</span>
+          </button>
+          <button
+            type='button'
+            className='btn btn-light'
+            onClick={() => removeLike(_id)}
+          >
+            <i className='fas fa-thumbs-down'></i>
+          </button>
+          <Link to={`posts/${_id}`} className='btn btn-primary'>
+            Discussion{' '}
+            <span className='comment-count'>
+              {comments.length > 0 ? comments.length : '0'}
+            </span>
+          </Link>
+          {auth.isAuthenticated && auth.user._id === user ? (
+            <button
+              type='button'
+              className='btn btn-danger'
+              onClick={() => deletePost(_id)}
+            >
+              <i className='fas fa-times'></i>
+            </button>
+          ) : null}
+        </Fragment>
       ) : null}
     </div>
   </div>
 );
+
+PostItem.defaultProps = {
+  showActions: true,
+};
 
 PostItem.propTypes = {
   post: PropTypes.object.isRequired,
@@ -64,4 +78,6 @@ const mapStateToProps = state => ({
   auth: state.auth,
 });
 
-export default connect(mapStateToProps, { addLike, removeLike, deletePost })(PostItem);
+export default connect(mapStateToProps, { addLike, removeLike, deletePost })(
+  PostItem
+);
